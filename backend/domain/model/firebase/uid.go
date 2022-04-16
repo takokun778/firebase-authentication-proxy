@@ -1,7 +1,7 @@
 package firebase
 
 import (
-	"firebase-authentication/domain/model/user"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
 
 	"github.com/google/uuid"
 )

@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	cx "firebase-authentication/driver/context"
-	"firebase-authentication/usecase"
+	cx "github.com/takokun778/firebase-authentication-proxy/driver/context"
+	"github.com/takokun778/firebase-authentication-proxy/usecase"
 )
 
 type FirebasePresenter struct {

@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"firebase-authentication/domain/model/firebase"
-	"firebase-authentication/domain/model/key"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/key"
 )
 
 type FirebaseInputPort interface {

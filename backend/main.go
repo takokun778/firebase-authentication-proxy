@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	_ "firebase-authentication/driver/env"
-	"firebase-authentication/driver/server"
+	_ "github.com/takokun778/firebase-authentication-proxy/driver/env"
+	"github.com/takokun778/firebase-authentication-proxy/driver/server"
 )
 
 func main() {

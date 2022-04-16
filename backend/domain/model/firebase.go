@@ -1,7 +1,7 @@
 package model
 
 import (
-	"firebase-authentication/domain/model/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/firebase"
 )
 
 type Firebase struct {

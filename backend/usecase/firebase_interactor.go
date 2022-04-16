@@ -3,10 +3,10 @@ package usecase
 import (
 	"context"
 
-	"firebase-authentication/domain/model/errors"
-	"firebase-authentication/domain/model/firebase"
-	"firebase-authentication/domain/model/user"
-	"firebase-authentication/driver/log"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
+	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 )
 
 type FirebaseInteractor struct {

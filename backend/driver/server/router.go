@@ -3,8 +3,8 @@ package server
 import (
 	"net/http"
 
-	"firebase-authentication/driver/context"
-	"firebase-authentication/driver/injector"
+	"github.com/takokun778/firebase-authentication-proxy/driver/context"
+	"github.com/takokun778/firebase-authentication-proxy/driver/injector"
 )
 
 type Router struct {

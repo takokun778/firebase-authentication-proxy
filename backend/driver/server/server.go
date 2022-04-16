@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"firebase-authentication/driver/injector"
+	"github.com/takokun778/firebase-authentication-proxy/driver/injector"
 )
 
 type Server struct{}

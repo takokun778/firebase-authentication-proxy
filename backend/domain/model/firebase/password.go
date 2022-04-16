@@ -1,8 +1,9 @@
 package firebase
 
 import (
-	"firebase-authentication/domain/model/errors"
 	"fmt"
+
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
 )
 
 type Password string

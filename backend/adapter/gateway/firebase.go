@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"time"
 
-	"firebase-authentication/domain/model/errors"
-	"firebase-authentication/domain/model/firebase"
-	"firebase-authentication/domain/model/user"
-	df "firebase-authentication/driver/firebase"
-	"firebase-authentication/driver/log"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
+	df "github.com/takokun778/firebase-authentication-proxy/driver/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 
 	"firebase.google.com/go/auth"
 )

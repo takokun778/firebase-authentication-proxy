@@ -1,11 +1,11 @@
 package injector
 
 import (
-	"firebase-authentication/adapter/controller"
-	"firebase-authentication/adapter/gateway"
-	"firebase-authentication/adapter/presenter"
-	"firebase-authentication/driver/firebase"
-	"firebase-authentication/usecase"
+	"github.com/takokun778/firebase-authentication-proxy/adapter/controller"
+	"github.com/takokun778/firebase-authentication-proxy/adapter/gateway"
+	"github.com/takokun778/firebase-authentication-proxy/adapter/presenter"
+	"github.com/takokun778/firebase-authentication-proxy/driver/firebase"
+	"github.com/takokun778/firebase-authentication-proxy/usecase"
 )
 
 type Injector struct {

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"firebase-authentication/driver/log"
-	"firebase-authentication/usecase"
+	"github.com/takokun778/firebase-authentication-proxy/driver/log"
+	"github.com/takokun778/firebase-authentication-proxy/usecase"
 )
 
 type FirebaseController struct {

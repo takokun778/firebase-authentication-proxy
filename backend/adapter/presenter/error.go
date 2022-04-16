@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"firebase-authentication/domain/model/errors"
-	cx "firebase-authentication/driver/context"
-	"firebase-authentication/driver/log"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
+	cx "github.com/takokun778/firebase-authentication-proxy/driver/context"
+	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 )
 
 var (

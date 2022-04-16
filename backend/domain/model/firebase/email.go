@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"firebase-authentication/domain/model/errors"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
 )
 
 type Email string

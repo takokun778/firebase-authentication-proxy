@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"firebase-authentication/driver/context"
-	"firebase-authentication/driver/log"
+	"github.com/takokun778/firebase-authentication-proxy/driver/context"
+	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 )
 
 var (
