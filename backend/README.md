@@ -6,32 +6,51 @@
 .
 ├── main.go
 ├── domain/model
-│   ├── error
-│   │   └── error.go
-│   └── firebase
-│       └── firebase.go
+│   ├── errors
+│   │   └── errors.go
+│   ├── firebase
+│   │   ├── value.go
+│   │   └── repository.go
+│   ├── key
+│   │   └── key.go
+│   ├── user
+│   │   ├── value.go
+│   │   └── repository.go
+│   ├── user.go
+│   └── firebase.go
 ├── usecase
-│   ├── firebase_repository.go
 │   ├── firebase_input_port.go
 │   ├── firebase_output_port.go
-│   └── firebase_interactor.go
+│   ├── firebase_interactor.go
+│   ├── key_input_port.go
+│   ├── key_output_port.go
+│   └── key_interactor.go
 ├── adapter
 │   ├── controller
-│   │   ├── firebase_controller.go
-│   │   └── firebase_controller.go
+│   │   ├── firebase.go
+│   │   └── key.go
 │   ├── gateway
-│   │   ├── firebase_entity.go
-│   │   ├── firebase_gateway.go
-│   │   └── firebase_sql.go
+│   │   ├── firebase.go
+│   │   └── user.go
 │   └── presenter
-│       └── firebase_presenter.go
+│       ├── firebase.go
+│       ├── key.go
+│       └── error.go
 └── driver
     ├── server
-    │   ├── server.go
+    │   ├── middleware.go
     │   ├── rooter.go
-    │   └── middleware.go
+    │   └── server.go
+    ├── firebase
+    │   └── client.go
+    ├── injector
+    │   └── injector.go
+    ├── log
+    │   └── log.go
+    ├── env
+    │   └── env.go
     ├── db
-    │   └── db.go
+    │   └── client.go
     └── rest
         └── client.go
 ```
