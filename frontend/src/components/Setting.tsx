@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { SettingsIcon } from '@chakra-ui/icons';
+import { SettingsIcon } from "@chakra-ui/icons";
 import {
     Drawer,
     DrawerBody,
@@ -13,16 +13,16 @@ import {
     IconButton,
     Stack,
     useDisclosure,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { LogoutButton } from './LogoutButton';
-import { PasswordInputBox } from './PasswordInputBox';
-import { SaveChangePasswordButton } from './SaveChangePasswordButton';
-import { WithdrawButton } from './WithdrawButton';
+import { LogoutButton } from "./LogoutButton";
+import { PasswordInputBox } from "./PasswordInputBox";
+import { SaveChangePasswordButton } from "./SaveChangePasswordButton";
+import { WithdrawButton } from "./WithdrawButton";
 
 export const Setting: React.FC<{}> = ({}) => {
-    const [oldPass, setOldPass] = useState('');
-    const [newPass, setNewPass] = useState('');
+    const [oldPass, setOldPass] = useState("");
+    const [newPass, setNewPass] = useState("");
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 

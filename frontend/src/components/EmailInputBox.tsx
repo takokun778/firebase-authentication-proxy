@@ -1,8 +1,6 @@
-import { Box, Input, Text } from '@chakra-ui/react';
+import { Box, Input, Text } from "@chakra-ui/react";
 
-export type EmailInputBoxProps = {
-    setEmail: (email: string) => void;
-};
+export type EmailInputBoxProps = { setEmail: (email: string) => void };
 
 export const EmailInputBox: React.FC<EmailInputBoxProps> = ({ setEmail }) => {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

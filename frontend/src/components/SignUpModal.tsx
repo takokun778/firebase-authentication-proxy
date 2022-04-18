@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
 import {
     Button,
@@ -12,23 +12,25 @@ import {
     ModalHeader,
     ModalOverlay,
     useToast,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { getKey, postRegister } from '../api/api';
-import { encrypt } from '../api/enctypt';
-import { isLockedAtom } from '../recoil/isLockedAtom';
-import { EmailInputBox } from './EmailInputBox';
-import { PasswordInputBox } from './PasswordInputBox';
+import { getKey, postRegister } from "../api/api";
+import { encrypt } from "../api/enctypt";
+import { isLockedAtom } from "../recoil/isLockedAtom";
+import { EmailInputBox } from "./EmailInputBox";
+import { PasswordInputBox } from "./PasswordInputBox";
 
 export type SignUpModalProps = {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
+    isOpen: boolean,
+    onOpen: () => void,
+    onClose: () => void,
 };
 
-export const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onOpen, onClose }) => {
-    const [email, setEmail] = useState('');
-    const [pass, setPass] = useState('');
+export const SignUpModal: React.FC<SignUpModalProps> = (
+    { isOpen, onOpen, onClose },
+) => {
+    const [email, setEmail] = useState("");
+    const [pass, setPass] = useState("");
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -43,12 +45,16 @@ export const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onOpen, onClos
             const password = await encrypt(key, pass);
             setLocked(true);
             await postRegister(email, password);
-            navigate('/');
-            toast({ title: 'sign up success', status: 'success', isClosable: true });
+            navigate("/");
+            toast({
+                title: "sign up success",
+                status: "success",
+                isClosable: true,
+            });
             onClose();
         } catch (e) {
             console.error(e);
-            toast({ title: 'sign up failed', status: 'error', isClosable: true });
+            toast({ title: "sign up failed", status: "error", isClosable: true });
         } finally {
             setLocked(false);
         }

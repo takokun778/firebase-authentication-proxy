@@ -1,8 +1,8 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue } from "recoil";
 
-import { Center, Spinner } from '@chakra-ui/react';
+import { Center, Spinner } from "@chakra-ui/react";
 
-import { isLockedAtom } from '../recoil/isLockedAtom';
+import { isLockedAtom } from "../recoil/isLockedAtom";
 
 export const LockLoading: React.FC<{}> = ({}) => {
     const isLocked = useRecoilValue(isLockedAtom);

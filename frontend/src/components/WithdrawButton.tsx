@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
 import {
     Button,
@@ -13,15 +13,15 @@ import {
     ModalOverlay,
     useDisclosure,
     useToast,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { getKey, postLogout, postWithdraw } from '../api/api';
-import { encrypt } from '../api/enctypt';
-import { isLockedAtom } from '../recoil/isLockedAtom';
-import { PasswordInputBox } from './PasswordInputBox';
+import { getKey, postLogout, postWithdraw } from "../api/api";
+import { encrypt } from "../api/enctypt";
+import { isLockedAtom } from "../recoil/isLockedAtom";
+import { PasswordInputBox } from "./PasswordInputBox";
 
 export const WithdrawButton: React.FC<{}> = ({}) => {
-    const [pass, setPass] = useState('');
+    const [pass, setPass] = useState("");
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -35,10 +35,18 @@ export const WithdrawButton: React.FC<{}> = ({}) => {
             const password = await encrypt(key, pass);
             await postWithdraw(password);
             await postLogout();
-            navigate('/login');
-            toast({ title: 'withdraw success', status: 'success', isClosable: true });
+            navigate("/login");
+            toast({
+                title: "withdraw success",
+                status: "success",
+                isClosable: true,
+            });
         } catch (error) {
-            toast({ title: 'withdraw failed', status: 'error', isClosable: true });
+            toast({
+                title: "withdraw failed",
+                status: "error",
+                isClosable: true,
+            });
         } finally {
             setLocked(false);
         }

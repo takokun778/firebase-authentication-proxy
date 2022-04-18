@@ -1,17 +1,19 @@
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from "recoil";
 
-import { Button, useToast } from '@chakra-ui/react';
+import { Button, useToast } from "@chakra-ui/react";
 
-import { getKey, putChangePassword } from '../api/api';
-import { encrypt } from '../api/enctypt';
-import { isLockedAtom } from '../recoil/isLockedAtom';
+import { getKey, putChangePassword } from "../api/api";
+import { encrypt } from "../api/enctypt";
+import { isLockedAtom } from "../recoil/isLockedAtom";
 
 export type SaveChangePasswordButtonProps = {
-    oldPassword: string;
-    newPassword: string;
+    oldPassword: string,
+    newPassword: string,
 };
 
-export const SaveChangePasswordButton: React.FC<SaveChangePasswordButtonProps> = ({ oldPassword, newPassword }) => {
+export const SaveChangePasswordButton: React.FC<SaveChangePasswordButtonProps> = (
+    { oldPassword, newPassword },
+) => {
     const toast = useToast();
     const setLocked = useSetRecoilState(isLockedAtom);
 
@@ -22,9 +24,17 @@ export const SaveChangePasswordButton: React.FC<SaveChangePasswordButtonProps> =
             const oldPass = await encrypt(key, oldPassword);
             const newPass = await encrypt(key, newPassword);
             await putChangePassword(oldPass, newPass);
-            toast({ title: 'change password success', status: 'success', isClosable: true });
+            toast({
+                title: "change password success",
+                status: "success",
+                isClosable: true,
+            });
         } catch (error) {
-            toast({ title: 'change password failed', status: 'error', isClosable: true });
+            toast({
+                title: "change password failed",
+                status: "error",
+                isClosable: true,
+            });
         } finally {
             setLocked(false);
         }

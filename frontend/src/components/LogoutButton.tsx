@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
-import { Button, useToast } from '@chakra-ui/react';
+import { Button, useToast } from "@chakra-ui/react";
 
-import { postLogout } from '../api/api';
-import { isLockedAtom } from '../recoil/isLockedAtom';
+import { postLogout } from "../api/api";
+import { isLockedAtom } from "../recoil/isLockedAtom";
 
 export const LogoutButton: React.FC<{}> = ({}) => {
     const navigate = useNavigate();
@@ -15,8 +15,8 @@ export const LogoutButton: React.FC<{}> = ({}) => {
         try {
             setLocked(true);
             await postLogout();
-            navigate('/login');
-            toast({ title: 'logout', status: 'success', isClosable: true });
+            navigate("/login");
+            toast({ title: "logout", status: "success", isClosable: true });
         } finally {
             setLocked(false);
         }

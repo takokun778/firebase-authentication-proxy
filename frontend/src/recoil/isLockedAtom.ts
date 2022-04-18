@@ -1,6 +1,3 @@
-import { atom } from 'recoil';
+import { atom } from "recoil";
 
-export const isLockedAtom = atom<boolean>({
-    key: 'isLockedKey',
-    default: false,
-});
+export const isLockedAtom = atom<boolean>({ key: "isLockedKey", default: false });

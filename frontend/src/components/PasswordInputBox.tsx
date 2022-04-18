@@ -1,12 +1,14 @@
-import { ViewIcon } from '@chakra-ui/icons';
-import { Box, Input, InputGroup, InputRightElement, Text, useBoolean } from '@chakra-ui/react';
+import { ViewIcon } from "@chakra-ui/icons";
+import { Box, Input, InputGroup, InputRightElement, Text, useBoolean } from "@chakra-ui/react";
 
 export type PasswordInputBoxProps = {
-    setPass: (pass: string) => void;
-    text?: string;
+    setPass: (pass: string) => void,
+    text?: string,
 };
 
-export const PasswordInputBox: React.FC<PasswordInputBoxProps> = ({ setPass, text }) => {
+export const PasswordInputBox: React.FC<PasswordInputBoxProps> = (
+    { setPass, text },
+) => {
     const [show, setShow] = useBoolean();
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
