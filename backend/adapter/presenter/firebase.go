@@ -80,6 +80,7 @@ func (p *FirebasePresenter) Logout(ctx context.Context, output usecase.FirebaseL
 		MaxAge:   0,
 		HttpOnly: true,
 		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	http.SetCookie(r, access)
@@ -91,6 +92,7 @@ func (p *FirebasePresenter) Logout(ctx context.Context, output usecase.FirebaseL
 		MaxAge:   0,
 		HttpOnly: true,
 		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	http.SetCookie(r, refresh)
