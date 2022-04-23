@@ -78,14 +78,14 @@ linters:
     - whitespace
     - wsl
   disable:
-    - wrapcheck
-    - ireturn
-    - tagliatelle
-    - gochecknoglobals
-    - exhaustivestruct
-    - golint
-    - lll
     - dupl
-    - revive
-    - gochecknoinits
     - errorlint
+    - exhaustivestruct
+    - gochecknoglobals
+    - gochecknoinits
+    - golint
+    - ireturn
+    - lll
+    - wrapcheck
+    - revive
+    - tagliatelle
