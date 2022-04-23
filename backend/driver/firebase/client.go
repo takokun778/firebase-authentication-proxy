@@ -13,61 +13,61 @@ import (
 	"google.golang.org/api/option"
 )
 
+const perm = 0o600
+
 // @see https://firebase.google.com/docs/reference/rest/auth
-type ApiRestClient struct {
+type APIRestClient struct {
 	*http.Client
 	Endpoint string
-	ApiKey   string
+	APIKey   string
 }
 
-var (
-	AdminClient *auth.Client
-	ApiClient   *ApiRestClient
-)
+type Client struct {
+	Admin *auth.Client
+	API   *APIRestClient
+}
 
 type secret struct {
 	Type                    string `json:"type"`
-	ProjectId               string `json:"project_id"`
-	PrivateKeyId            string `json:"private_key_id"`
+	ProjectID               string `json:"project_id"`
+	PrivateKeyID            string `json:"private_key_id"`
 	PrivateKey              string `json:"private_key"`
 	ClientEmail             string `json:"client_email"`
-	ClientId                string `json:"client_id"`
-	AuthUrl                 string `json:"auth_url"`
-	TokenUrl                string `json:"token_url"`
-	AuthProviderX509CertUrl string `json:"auth_provider_x509_cert"`
-	ClientX509CertUrl       string `json:"client_x509_cert"`
+	ClientID                string `json:"client_id"`
+	AuthURL                 string `json:"auth_url"`
+	TokenURL                string `json:"token_url"`
+	AuthProviderX509CertURL string `json:"auth_provider_x509_cert"`
+	ClientX509CertURL       string `json:"client_x509_cert"`
 }
 
-func init() {
+func NewFirebaseClient() *Client {
 	s := secret{
 		Type:                    os.Getenv("TYPE"),
-		ProjectId:               os.Getenv("PROJECT_ID"),
-		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
+		ProjectID:               os.Getenv("PROJECT_ID"),
+		PrivateKeyID:            os.Getenv("PRIVATE_KEY_ID"),
 		PrivateKey:              os.Getenv("PRIVATE_KEY"),
 		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
-		ClientId:                os.Getenv("CLIENT_ID"),
-		AuthUrl:                 os.Getenv("AUTH_URL"),
-		TokenUrl:                os.Getenv("TOKEN_URL"),
-		AuthProviderX509CertUrl: os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
-		ClientX509CertUrl:       os.Getenv("CLIENT_X509_CERT_URL"),
+		ClientID:                os.Getenv("CLIENT_ID"),
+		AuthURL:                 os.Getenv("AUTH_URL"),
+		TokenURL:                os.Getenv("TOKEN_URL"),
+		AuthProviderX509CertURL: os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
+		ClientX509CertURL:       os.Getenv("CLIENT_X509_CERT_URL"),
 	}
 
 	file, _ := json.MarshalIndent(s, "", "")
 
-	if err := ioutil.WriteFile("secret.json", file, 0600); err != nil {
+	if err := ioutil.WriteFile("secret.json", file, perm); err != nil {
 		log.Fatalf("error write file secret.json: %v", err)
 	}
 
 	opt := option.WithCredentialsFile("./secret.json")
 
 	app, err := firebase.NewApp(context.Background(), nil, opt)
-
 	if err != nil {
 		log.Fatalf("error initializing app: %v", err)
 	}
 
-	AdminClient, err = app.Auth(context.Background())
-
+	admin, err := app.Auth(context.Background())
 	if err != nil {
 		log.Fatalf("error create auth client: %v", err)
 	}
@@ -88,9 +88,14 @@ func init() {
 		log.Fatalf("error firebase api key is empty")
 	}
 
-	ApiClient = &ApiRestClient{
+	api := &APIRestClient{
 		Client:   &http.Client{},
 		Endpoint: endpoint,
-		ApiKey:   key,
+		APIKey:   key,
+	}
+
+	return &Client{
+		Admin: admin,
+		API:   api,
 	}
 }

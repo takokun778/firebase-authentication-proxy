@@ -1,15 +1,22 @@
-package firebase
+package firebase_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/firebase"
+)
 
 func TestNewPassword(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		value string
 	}
+
 	tests := []struct {
 		name    string
 		args    args
-		want    Password
+		want    firebase.Password
 		wantErr bool
 	}{
 		{
@@ -17,7 +24,7 @@ func TestNewPassword(t *testing.T) {
 			args: args{
 				value: "password",
 			},
-			want:    Password("password"),
+			want:    firebase.Password("password"),
 			wantErr: false,
 		},
 		{
@@ -25,7 +32,7 @@ func TestNewPassword(t *testing.T) {
 			args: args{
 				value: "aaaaaa",
 			},
-			want:    Password("aaaaaa"),
+			want:    firebase.Password("aaaaaa"),
 			wantErr: false,
 		},
 		{
@@ -33,15 +40,19 @@ func TestNewPassword(t *testing.T) {
 			args: args{
 				value: "aaaaa",
 			},
-			want:    Password(""),
+			want:    firebase.Password(""),
 			wantErr: true,
 		},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewPassword(tt.args.value)
+			t.Parallel()
+			got, err := firebase.NewPassword(tt.args.value)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewPassword() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if got != tt.want {

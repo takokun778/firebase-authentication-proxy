@@ -7,6 +7,7 @@ func NewName(value string) (Name, error) {
 	if err := v.validate(); err != nil {
 		return Name(""), err
 	}
+
 	return Name(value), nil
 }
 

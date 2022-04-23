@@ -17,54 +17,27 @@ func NewRouter(injector *injector.Injector) *Router {
 	}
 }
 
-func (router *Router) Handle() http.Handler {
+func (rt *Router) Handle() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r = r.WithContext(context.SetResWriter(r.Context(), w))
 
-		path := r.URL.Path
-
-		method := r.Method
-
-		if method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
+		switch r.URL.Path {
+		case "/api/register":
+			rt.injector.Firebase.Register(w, r)
+		case "/api/login":
+			rt.injector.Firebase.Login(w, r)
+		case "/api/change/password":
+			rt.injector.Firebase.ChangePassword(w, r)
+		case "/api/login/check":
+			rt.injector.Firebase.CheckLogin(w, r)
+		case "/api/logout":
+			rt.injector.Firebase.Logout(w, r)
+		case "/api/withdraw":
+			rt.injector.Firebase.Withdraw(w, r)
+		case "/api/key":
+			rt.injector.Key.GetPublic(w, r)
+		default:
+			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
-
-		if path == "/api/register" && method == "POST" {
-			router.injector.Firebase.Register(w, r)
-			return
-		}
-
-		if path == "/api/login" && method == "POST" {
-			router.injector.Firebase.Login(w, r)
-			return
-		}
-
-		if path == "/api/change/password" && method == "PUT" {
-			router.injector.Firebase.ChangePassword(w, r)
-			return
-		}
-
-		if path == "/api/login/check" && method == "POST" {
-			router.injector.Firebase.CheckLogin(w, r)
-			return
-		}
-
-		if path == "/api/logout" && method == "POST" {
-			router.injector.Firebase.Logout(w, r)
-			return
-		}
-
-		if path == "/api/withdraw" && method == "POST" {
-			router.injector.Firebase.Withdraw(w, r)
-			return
-		}
-
-		if path == "/api/key" && method == "GET" {
-			router.injector.Key.GetPublic(w, r)
-			return
-		}
-
-		w.WriteHeader(http.StatusMethodNotAllowed)
 	})
 }

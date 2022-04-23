@@ -7,16 +7,16 @@ import (
 )
 
 type Tokens struct {
-	Uid          Uid
+	UID          UID
 	AccessToken  AccessToken
 	RefreshToken RefreshToken
 	Expires      int
 }
 
 type Repository interface {
-	Save(context.Context, user.Id, Email, Password) error
-	GenerateTokens(context.Context, Email, Password) (Tokens, error)
-	ChangePassword(context.Context, Uid, Password) error
+	Save(context.Context, user.ID, Email, Password) error
+	Login(context.Context, Email, Password) (Tokens, error)
+	ChangePassword(context.Context, UID, Password) error
 	Verify(context.Context, AccessToken) error
-	Delete(context.Context, Uid) error
+	Delete(context.Context, UID) error
 }

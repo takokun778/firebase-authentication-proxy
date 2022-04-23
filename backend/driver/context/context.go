@@ -23,15 +23,18 @@ func SetReq(parents context.Context) context.Context {
 	/* #nosec */
 	entropy := ulid.Monotonic(rand.New(rand.NewSource(t.UnixNano())), 0)
 	id := ulid.MustNew(ulid.Timestamp(t), entropy)
+
 	return context.WithValue(parents, ctxReqKey, id.String())
 }
 
 func GetReqCtx(ctx context.Context) string {
 	v := ctx.Value(ctxReqKey)
 	id, ok := v.(string)
+
 	if !ok {
 		return ""
 	}
+
 	return id
 }
 
@@ -39,12 +42,16 @@ func SetResWriter(parents context.Context, w http.ResponseWriter) context.Contex
 	return context.WithValue(parents, ctxResWriterKey, w)
 }
 
+var errContext = errors.New("not found http response writer")
+
 func GetResWriter(ctx context.Context) (http.ResponseWriter, error) {
 	v := ctx.Value(ctxResWriterKey)
 	w, ok := v.(http.ResponseWriter)
+
 	if !ok {
-		return nil, errors.New("not found http response writer")
+		return nil, errContext
 	}
+
 	return w, nil
 }
 
@@ -55,8 +62,10 @@ func SetCode(parents context.Context, status int) context.Context {
 func GetCode(ctx context.Context) int {
 	v := ctx.Value(ctxStatusKey)
 	status, ok := v.(int)
+
 	if !ok {
 		return 0
 	}
+
 	return status
 }

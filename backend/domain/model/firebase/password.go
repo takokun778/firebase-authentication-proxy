@@ -1,10 +1,10 @@
 package firebase
 
 import (
-	"fmt"
-
 	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
 )
+
+const minLength = 6
 
 type Password string
 
@@ -13,6 +13,7 @@ func NewPassword(value string) (Password, error) {
 	if err := v.validate(); err != nil {
 		return Password(""), err
 	}
+
 	return Password(value), nil
 }
 
@@ -25,12 +26,9 @@ func (p Password) Equals(other Password) bool {
 }
 
 func (p Password) validate() error {
-	// 5文字以化はNG
-	if len(p.Value()) <= 5 {
-		fmt.Println("hoge")
-		return errors.NewErrBadRequest("password is too short", nil)
+	if len(p.Value()) < minLength {
+		return errors.NewBadRequestError("password is too short")
 	}
-	// 大文字のアルファベットを1つ含む
-	// 記号をひとつ含む
+
 	return nil
 }

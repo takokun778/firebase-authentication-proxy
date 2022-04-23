@@ -7,16 +7,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const dev = "dev"
+
 func init() {
 	env := os.Getenv("ENV")
 
 	if env == "" {
-		env = "dev"
+		env = dev
 	}
 
-	if env == "dev" {
+	if env == dev {
 		err := godotenv.Load(".env")
-
 		if err != nil {
 			log.Fatalf("error loading .env file %v", err)
 		}
@@ -24,5 +25,5 @@ func init() {
 }
 
 func IsDev() bool {
-	return os.Getenv("ENV") == "dev"
+	return os.Getenv("ENV") == dev
 }

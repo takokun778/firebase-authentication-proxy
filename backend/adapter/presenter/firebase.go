@@ -51,7 +51,12 @@ func (p *FirebasePresenter) Login(ctx context.Context, output usecase.FirebaseLo
 
 	http.SetCookie(r, refresh)
 
-	res, _ := json.Marshal(output)
+	res, err := json.Marshal(output)
+	if err != nil {
+		r.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
 
 	r.WriteHeader(http.StatusOK)
 

@@ -7,6 +7,7 @@ func NewRefreshToken(value string) (RefreshToken, error) {
 	if err := v.validate(); err != nil {
 		return RefreshToken(""), err
 	}
+
 	return v, nil
 }
 

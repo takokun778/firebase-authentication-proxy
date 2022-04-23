@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"fmt"
+	"errors"
 )
 
 func IsClientError(status int) bool {
@@ -12,39 +12,35 @@ func IsServerError(status int) bool {
 	return 500 <= status && status <= 599
 }
 
-type ErrBadRequest struct {
-	Err error
+type BadRequestError struct {
+	Msg string
 }
 
-func NewErrBadRequest(msg string, err error) *ErrBadRequest {
-	var e error
-	if err != nil {
-		e = fmt.Errorf(msg, err)
-	} else {
-		e = fmt.Errorf(msg)
-	}
-	return &ErrBadRequest{
-		Err: e,
+func NewBadRequestError(msg string) *BadRequestError {
+	return &BadRequestError{
+		Msg: msg,
 	}
 }
 
-func (e ErrBadRequest) Error() string {
-	return e.Err.Error()
+func (e BadRequestError) Error() string {
+	return e.Msg
 }
 
-type ErrUnauthorized struct {
+var ErrUnauthorized = errors.New("unauthorized")
+
+type UnauthorizedError struct {
 	Err error
 }
 
-func NewErrUnauthorized(err error) *ErrUnauthorized {
+func NewUnauthorizedError(err error) *UnauthorizedError {
 	// if err != nil {
 	// 認証エラーとなった原因を解析するために理由をロギングしておく
 	// }
-	return &ErrUnauthorized{
-		Err: fmt.Errorf("unauthorized"),
+	return &UnauthorizedError{
+		Err: ErrUnauthorized,
 	}
 }
 
-func (e *ErrUnauthorized) Error() string {
+func (e *UnauthorizedError) Error() string {
 	return e.Err.Error()
 }

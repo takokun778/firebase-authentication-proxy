@@ -7,7 +7,6 @@ import (
 
 	cx "github.com/takokun778/firebase-authentication-proxy/driver/context"
 	"github.com/takokun778/firebase-authentication-proxy/driver/env"
-
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -43,11 +42,15 @@ func init() {
 	}
 
 	log, _ = zapconf.Build()
-	defer log.Sync()
+
+	defer func() {
+		_ = log.Sync()
+	}()
 }
 
 func WithCtx(ctx context.Context) *zap.Logger {
 	id := cx.GetReqCtx(ctx)
+
 	return log.Named(id)
 }
 

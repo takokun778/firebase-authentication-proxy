@@ -1,10 +1,10 @@
 package user
 
 type Primitive struct {
-	id Id
+	id ID
 }
 
-func (p Primitive) Id() Id {
+func (p Primitive) ID() ID {
 	return p.id
 }
 
@@ -12,7 +12,7 @@ type Values struct {
 	id string
 }
 
-func NewPrimitive(id Id) Primitive {
+func NewPrimitive(id ID) Primitive {
 	return Primitive{
 		id: id,
 	}

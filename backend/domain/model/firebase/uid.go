@@ -1,29 +1,29 @@
 package firebase
 
 import (
-	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
-
 	"github.com/google/uuid"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
 )
 
-type Uid uuid.UUID
+type UID uuid.UUID
 
-func NewUid(value string) (Uid, error) {
+func NewUID(value string) (UID, error) {
 	i, err := uuid.Parse(value)
 	if err != nil {
-		return Uid(uuid.UUID{}), err
+		return UID(uuid.UUID{}), err
 	}
-	return Uid(i), nil
+
+	return UID(i), nil
 }
 
-func (i Uid) Value() uuid.UUID {
+func (i UID) Value() uuid.UUID {
 	return uuid.UUID(i)
 }
 
-func (i Uid) String() string {
+func (i UID) String() string {
 	return i.Value().String()
 }
 
-func (i Uid) ToUserId() (user.Id, error) {
-	return user.NewId(i.String())
+func (i UID) ToUserID() (user.ID, error) {
+	return user.NewID(i.String())
 }

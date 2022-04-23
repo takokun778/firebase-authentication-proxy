@@ -14,6 +14,7 @@ import (
 var (
 	privateKey *rsa.PrivateKey
 	PublicKey  []byte
+	ErrInvalid = errors.New("private key is invalid")
 )
 
 func init() {
@@ -23,7 +24,6 @@ func init() {
 	// 	log.Fatalf("failed to read pem key file: %v", err)
 	// }
 	// key, err := exportPEMStrToPrivKey(k)
-
 	// firebaseが発行する秘密鍵から公開鍵を作る場合
 	priv := os.Getenv("PRIVATE_KEY")
 
@@ -36,7 +36,6 @@ func init() {
 	}
 
 	b, err := x509.MarshalPKIXPublicKey(&key.PublicKey)
-
 	if err != nil {
 		log.Fatalf("failed to marshal public key: %v", err)
 	}
@@ -47,7 +46,6 @@ func init() {
 			Bytes: b,
 		},
 	)
-
 }
 
 func Decrypt(encrypted []byte) ([]byte, error) {
@@ -65,7 +63,6 @@ func exportPEMStrToPrivKey(priv []byte) (*rsa.PrivateKey, error) {
 	// key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 
 	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +70,7 @@ func exportPEMStrToPrivKey(priv []byte) (*rsa.PrivateKey, error) {
 	pk, ok := key.(*rsa.PrivateKey)
 
 	if !ok {
-		return nil, errors.New("private key is invalid")
+		return nil, ErrInvalid
 	}
 
 	return pk, nil

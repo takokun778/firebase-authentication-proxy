@@ -10,13 +10,7 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 )
 
-var (
-	ErrorRender *errorRender
-)
-
-func init() {
-	ErrorRender = &errorRender{}
-}
+var ErrorRender = &errorRender{}
 
 type errorRender struct{}
 
@@ -31,9 +25,9 @@ func (errorRender) ErrRender(ctx context.Context, err error) {
 	var status int
 
 	switch err.(type) {
-	case *errors.ErrBadRequest:
+	case *errors.BadRequestError:
 		status = http.StatusBadRequest
-	case *errors.ErrUnauthorized:
+	case *errors.UnauthorizedError:
 		status = http.StatusUnauthorized
 	default:
 		status = http.StatusInternalServerError
@@ -47,14 +41,19 @@ func (errorRender) ErrRender(ctx context.Context, err error) {
 		log.WithCtx(ctx).Error(err.Error())
 	}
 
-	r.WriteHeader(status)
-
 	er := ErrorResponse{
 		Status:  status,
 		Message: err.Error(),
 	}
 
-	res, _ := json.Marshal(er)
+	res, err := json.Marshal(er)
+	if err != nil {
+		r.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
+	r.WriteHeader(status)
 
 	_, _ = r.Write(res)
 }

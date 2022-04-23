@@ -24,19 +24,16 @@ type firebaseRegisterInput struct {
 
 func NewFirebaseRegisterInput(email string, password []byte) (firebaseRegisterInput, error) {
 	e, err := firebase.NewEmail(email)
-
 	if err != nil {
 		return firebaseRegisterInput{}, err
 	}
 
 	pv, err := key.Decrypt(password)
-
 	if err != nil {
 		return firebaseRegisterInput{}, err
 	}
 
 	p, err := firebase.NewPassword(string(pv))
-
 	if err != nil {
 		return firebaseRegisterInput{}, err
 	}
@@ -54,19 +51,16 @@ type firebaseLoginInput struct {
 
 func NewFirebaseLoginInput(email string, password []byte) (firebaseLoginInput, error) {
 	e, err := firebase.NewEmail(email)
-
 	if err != nil {
 		return firebaseLoginInput{}, err
 	}
 
 	pv, err := key.Decrypt(password)
-
 	if err != nil {
 		return firebaseLoginInput{}, err
 	}
 
 	p, err := firebase.NewPassword(string(pv))
-
 	if err != nil {
 		return firebaseLoginInput{}, err
 	}
@@ -85,31 +79,26 @@ type firebaseChangePasswordInput struct {
 
 func NewFirebaseChangePasswordInput(token string, oldPassword, newPassword []byte) (firebaseChangePasswordInput, error) {
 	at, err := firebase.NewAccessToken(token)
-
 	if err != nil {
 		return firebaseChangePasswordInput{}, err
 	}
 
 	opv, err := key.Decrypt(oldPassword)
-
 	if err != nil {
 		return firebaseChangePasswordInput{}, err
 	}
 
 	op, err := firebase.NewPassword(string(opv))
-
 	if err != nil {
 		return firebaseChangePasswordInput{}, err
 	}
 
 	npv, err := key.Decrypt(newPassword)
-
 	if err != nil {
 		return firebaseChangePasswordInput{}, err
 	}
 
 	np, err := firebase.NewPassword(string(npv))
-
 	if err != nil {
 		return firebaseChangePasswordInput{}, err
 	}
@@ -128,13 +117,11 @@ type firebaseCheckLoginInput struct {
 
 func NewFirebaseCheckLoginInput(access, refresh string) (firebaseCheckLoginInput, error) {
 	at, err := firebase.NewAccessToken(access)
-
 	if err != nil {
 		return firebaseCheckLoginInput{}, err
 	}
 
 	ft, err := firebase.NewRefreshToken(refresh)
-
 	if err != nil {
 		return firebaseCheckLoginInput{}, err
 	}
@@ -152,13 +139,11 @@ type firebaseLogoutInput struct {
 
 func NewFirebaseLogoutInput(access, refresh string) (firebaseLogoutInput, error) {
 	at, err := firebase.NewAccessToken(access)
-
 	if err != nil {
 		return firebaseLogoutInput{}, err
 	}
 
 	ft, err := firebase.NewRefreshToken(refresh)
-
 	if err != nil {
 		return firebaseLogoutInput{}, err
 	}
@@ -176,22 +161,20 @@ type firebaseWithdrawInput struct {
 
 func NewFirebaseWithdrawInput(token string, password []byte) (firebaseWithdrawInput, error) {
 	t, err := firebase.NewAccessToken(token)
-
 	if err != nil {
 		return firebaseWithdrawInput{}, err
 	}
 
 	pv, err := key.Decrypt(password)
-
 	if err != nil {
 		return firebaseWithdrawInput{}, err
 	}
 
 	p, err := firebase.NewPassword(string(pv))
-
 	if err != nil {
 		return firebaseWithdrawInput{}, err
 	}
+
 	return firebaseWithdrawInput{
 		AccessToken: t,
 		Password:    p,
@@ -204,7 +187,6 @@ type firebaseAuthorizeInput struct {
 
 func NewFirebaseAuthorizeInput(token string) (firebaseAuthorizeInput, error) {
 	t, err := firebase.NewAccessToken(token)
-
 	if err != nil {
 		return firebaseAuthorizeInput{}, err
 	}

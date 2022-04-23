@@ -14,7 +14,7 @@ type Injector struct {
 }
 
 func NewInjector() *Injector {
-	fg := gateway.NewFirebaseGateway(firebase.AdminClient, firebase.ApiClient)
+	fg := gateway.NewFirebaseGateway(firebase.NewFirebaseClient())
 	ug := gateway.NewUserInMemory()
 
 	fp := presenter.NewFirebasePresenter()

@@ -15,6 +15,7 @@ func NewAccessToken(value string) (AccessToken, error) {
 	if err := v.validate(); err != nil {
 		return AccessToken(""), err
 	}
+
 	return v, nil
 }
 
@@ -26,7 +27,7 @@ func (t AccessToken) validate() error {
 	return nil
 }
 
-func (t AccessToken) GetUid() (Uid, error) {
+func (t AccessToken) GetUID() (UID, error) {
 	payload := strings.Split(t.Value(), ".")[1]
 
 	decode, _ := base64.RawURLEncoding.DecodeString(payload)
@@ -34,10 +35,10 @@ func (t AccessToken) GetUid() (Uid, error) {
 	var c claims
 
 	if err := json.Unmarshal(decode, &c); err != nil {
-		return Uid(uuid.UUID{}), err
+		return UID(uuid.UUID{}), err
 	}
 
-	return NewUid(c.Uid)
+	return NewUID(c.UID)
 }
 
 func (t AccessToken) GetEmail() (Email, error) {
@@ -55,6 +56,6 @@ func (t AccessToken) GetEmail() (Email, error) {
 }
 
 type claims struct {
-	Uid   string `json:"user_id"`
+	UID   string `json:"user_id"`
 	Email string `json:"email"`
 }

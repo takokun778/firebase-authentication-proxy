@@ -9,9 +9,7 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/driver/log"
 )
 
-var (
-	corsAllowOrigin string
-)
+var corsAllowOrigin string
 
 func init() {
 	corsAllowOrigin = os.Getenv("CORS_ALLOW_ORIGIN")
@@ -29,6 +27,13 @@ func Middleware(next http.Handler) http.Handler {
 		now := time.Now()
 		r = r.WithContext(context.SetReq(r.Context()))
 		defer log.Access(r.Context(), r.URL.Path, r.Method, now)
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+
+			return
+		}
+
 		next.ServeHTTP(w, r)
 	})
 }

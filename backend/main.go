@@ -12,6 +12,8 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/driver/server"
 )
 
+const shutdownTime = 10
+
 func main() {
 	log.Printf("%s server starting...\n", os.Getenv("ENV"))
 
@@ -29,7 +31,7 @@ func main() {
 
 	log.Printf("SIGNAL %d received, then shutting down...\n", <-quit)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTime*time.Second)
 
 	defer cancel()
 

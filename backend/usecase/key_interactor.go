@@ -17,7 +17,6 @@ func NewKeyInteractor(keyOutputPort KeyOutputPort) KeyInputPort {
 }
 
 func (i *KeyInteractor) GetPublic(ctx context.Context, input keyGetPublicInput) {
-
 	output := KeyGetPublicOutput{
 		PublicKey: key.PublicKey,
 	}
