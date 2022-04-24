@@ -16,14 +16,14 @@ type FirebaseInteractor struct {
 }
 
 func NewFirebaseInteractor(
-	fRepository firebase.Repository,
-	fOutput FirebaseOutputPort,
-	uRepository user.Repository,
+	firebaseRepository firebase.Repository,
+	firebaseOutput FirebaseOutputPort,
+	userRepository user.Repository,
 ) FirebaseInputPort {
 	return &FirebaseInteractor{
-		firebaseRepository: fRepository,
-		firebaseOutputPort: fOutput,
-		userRepository:     uRepository,
+		firebaseRepository: firebaseRepository,
+		firebaseOutputPort: firebaseOutput,
+		userRepository:     userRepository,
 	}
 }
 
