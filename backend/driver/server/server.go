@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -40,8 +41,14 @@ func NewHTTPServer(
 	mux.Handle("/api/withdraw", Middleware(http.HandlerFunc(withdraw.Post)))
 	mux.Handle("/api/authorize", Middleware(http.HandlerFunc(authorize.Post)))
 
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
 	s := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", port),
 		Handler: mux,
 	}
 
