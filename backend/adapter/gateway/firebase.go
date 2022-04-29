@@ -59,8 +59,6 @@ func (g *FirebaseGateway) Login(
 		return port.Tokens{}, adapter.NewBadRequestError("bad request")
 	}
 
-	log.WithCtx(ctx).Debug(tokens.Access)
-
 	access, err := firebase.NewAccessToken(tokens.Access)
 	if err != nil {
 		return port.Tokens{}, adapter.NewBadRequestError("bad request")
@@ -70,8 +68,6 @@ func (g *FirebaseGateway) Login(
 	if err != nil {
 		return port.Tokens{}, adapter.NewBadRequestError("bad request")
 	}
-
-	log.WithCtx(ctx).Debug(access.Value())
 
 	return port.Tokens{
 		AccessToken:  access,
