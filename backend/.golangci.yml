@@ -1,8 +1,6 @@
 linters-settings:
   varnamelen:
     min-name-length: 1
-  funlen:
-    lines: 70
 linters:
   enable:
     - asciicheck
@@ -16,6 +14,7 @@ linters:
     - durationcheck
     - errcheck
     - errname
+    - errorlint
     - exhaustive
     - exportloopref
     - forbidigo
@@ -33,6 +32,7 @@ linters:
     - gofumpt
     - goheader
     - goimports
+    - golint
     - gomnd
     - gomoddirectives
     - gomodguard
@@ -44,6 +44,7 @@ linters:
     - importas
     - ineffassign
     - interfacer
+    - lll
     - makezero
     - maligned
     - misspell
@@ -58,6 +59,7 @@ linters:
     - prealloc
     - predeclared
     - promlinter
+    - revive
     - rowserrcheck
     - scopelint
     - sqlclosecheck
@@ -79,13 +81,9 @@ linters:
     - wsl
   disable:
     - dupl
-    - errorlint
     - exhaustivestruct
-    - gochecknoglobals
     - gochecknoinits
-    - golint
+    - gochecknoglobals
     - ireturn
-    - lll
-    - wrapcheck
-    - revive
     - tagliatelle
+    - wrapcheck

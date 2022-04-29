@@ -1,46 +1,43 @@
 package errors
 
-import (
-	"errors"
-)
-
-func IsClientError(status int) bool {
-	return 400 <= status && status <= 499
-}
-
-func IsServerError(status int) bool {
-	return 500 <= status && status <= 599
-}
-
-type BadRequestError struct {
+type ValidateError struct {
 	Msg string
 }
 
-func NewBadRequestError(msg string) *BadRequestError {
-	return &BadRequestError{
+func NewValidateError(msg string) *ValidateError {
+	return &ValidateError{
 		Msg: msg,
 	}
 }
 
-func (e BadRequestError) Error() string {
+func (e *ValidateError) Error() string {
 	return e.Msg
 }
 
-var ErrUnauthorized = errors.New("unauthorized")
-
 type UnauthorizedError struct {
-	Err error
+	Msg string
 }
 
-func NewUnauthorizedError(err error) *UnauthorizedError {
-	// if err != nil {
-	// 認証エラーとなった原因を解析するために理由をロギングしておく
-	// }
+func NewUnauthorizedError(msg string) *UnauthorizedError {
 	return &UnauthorizedError{
-		Err: ErrUnauthorized,
+		Msg: msg,
 	}
 }
 
 func (e *UnauthorizedError) Error() string {
-	return e.Err.Error()
+	return e.Msg
+}
+
+type InternalError struct {
+	Msg string
+}
+
+func NewInternalError(msg string) *InternalError {
+	return &InternalError{
+		Msg: msg,
+	}
+}
+
+func (e *InternalError) Error() string {
+	return e.Msg
 }

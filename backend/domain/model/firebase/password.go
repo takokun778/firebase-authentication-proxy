@@ -27,7 +27,7 @@ func (p Password) Equals(other Password) bool {
 
 func (p Password) validate() error {
 	if len(p.Value()) < minLength {
-		return errors.NewBadRequestError("password is too short")
+		return errors.NewValidateError("password is too short")
 	}
 
 	return nil

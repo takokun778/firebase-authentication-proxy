@@ -26,7 +26,7 @@ func (p Email) Value() string {
 
 func (p Email) validate() error {
 	if !regexp.MustCompile(email).MatchString(p.Value()) {
-		return errors.NewBadRequestError(fmt.Sprintf("validate error email: %s", p.Value()))
+		return errors.NewValidateError(fmt.Sprintf("validate error email: %s", p.Value()))
 	}
 
 	return nil

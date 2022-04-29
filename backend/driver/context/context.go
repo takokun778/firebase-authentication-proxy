@@ -2,9 +2,7 @@ package context
 
 import (
 	"context"
-	"errors"
 	"math/rand"
-	"net/http"
 	"time"
 
 	"github.com/oklog/ulid"
@@ -13,9 +11,8 @@ import (
 type key string
 
 const (
-	ctxReqKey       = key("req")
-	ctxResWriterKey = key("resWriter")
-	ctxStatusKey    = key("status")
+	ctxReqKey    = key("req")
+	ctxStatusKey = key("status")
 )
 
 func SetReq(parents context.Context) context.Context {
@@ -36,23 +33,6 @@ func GetReqCtx(ctx context.Context) string {
 	}
 
 	return id
-}
-
-func SetResWriter(parents context.Context, w http.ResponseWriter) context.Context {
-	return context.WithValue(parents, ctxResWriterKey, w)
-}
-
-var errContext = errors.New("not found http response writer")
-
-func GetResWriter(ctx context.Context) (http.ResponseWriter, error) {
-	v := ctx.Value(ctxResWriterKey)
-	w, ok := v.(http.ResponseWriter)
-
-	if !ok {
-		return nil, errContext
-	}
-
-	return w, nil
 }
 
 func SetCode(parents context.Context, status int) context.Context {

@@ -13,3 +13,5 @@ test:
 	go test ./...
 key:
 	openssl genrsa -out key.pem 2048
+di:
+	wire

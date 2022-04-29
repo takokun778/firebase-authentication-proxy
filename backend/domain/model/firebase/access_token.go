@@ -55,7 +55,37 @@ func (t AccessToken) GetEmail() (Email, error) {
 	return Email(c.Email), nil
 }
 
+func (t AccessToken) GetExp() (int, error) {
+	payload := strings.Split(t.Value(), ".")[1]
+
+	decode, _ := base64.RawURLEncoding.DecodeString(payload)
+
+	var c claims
+
+	if err := json.Unmarshal(decode, &c); err != nil {
+		return 0, err
+	}
+
+	return c.Exp, nil
+}
+
+func (t AccessToken) GetIat() (int, error) {
+	payload := strings.Split(t.Value(), ".")[1]
+
+	decode, _ := base64.RawURLEncoding.DecodeString(payload)
+
+	var c claims
+
+	if err := json.Unmarshal(decode, &c); err != nil {
+		return 0, err
+	}
+
+	return c.Iat, nil
+}
+
 type claims struct {
 	UID   string `json:"user_id"`
 	Email string `json:"email"`
+	Exp   int    `json:"exp"`
+	Iat   int    `json:"iat"`
 }

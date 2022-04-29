@@ -5,17 +5,25 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/takokun778/firebase-authentication-proxy/adapter"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/key"
 	"github.com/takokun778/firebase-authentication-proxy/driver/log"
-	"github.com/takokun778/firebase-authentication-proxy/usecase"
+	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type FirebaseController struct {
-	firebaseInteractor usecase.FirebaseInputPort
+type FirebaseRegisterController struct {
+	input  port.FirebaseRegisterInputPort
+	output port.FirebaseRegisterOutputPort
 }
 
-func NewFirebaseController(input usecase.FirebaseInputPort) *FirebaseController {
-	return &FirebaseController{
-		firebaseInteractor: input,
+func NewFirebaseRegisterController(
+	input port.FirebaseRegisterInputPort,
+	output port.FirebaseRegisterOutputPort,
+) *FirebaseRegisterController {
+	return &FirebaseRegisterController{
+		input:  input,
+		output: output,
 	}
 }
 
@@ -24,9 +32,11 @@ type RegisterRequest struct {
 	Password string `json:"password"`
 }
 
-func (c *FirebaseController) Register(w http.ResponseWriter, r *http.Request) {
+func (c *FirebaseRegisterController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -34,29 +44,48 @@ func (c *FirebaseController) Register(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
 	password, err := base64.StdEncoding.DecodeString(req.Password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseRegisterInput(req.Email, password)
+	pv, err := key.Decrypt(password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
 
-	c.firebaseInteractor.Register(r.Context(), input)
+	input, err := port.NewFirebaseRegisterInput(req.Email, string(pv))
+	if err != nil {
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
+
+		return
+	}
+
+	c.input.Execute(r.Context(), input)
+}
+
+type FirebaseLoginController struct {
+	input  port.FirebaseLoginInputPort
+	output port.FirebaseLoginOutputPort
+}
+
+func NewFirebaseLoginController(
+	input port.FirebaseLoginInputPort,
+	output port.FirebaseLoginOutputPort,
+) *FirebaseLoginController {
+	return &FirebaseLoginController{
+		input:  input,
+		output: output,
+	}
 }
 
 type LoginRequest struct {
@@ -64,9 +93,11 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (c *FirebaseController) Login(w http.ResponseWriter, r *http.Request) {
+func (c *FirebaseLoginController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -74,29 +105,48 @@ func (c *FirebaseController) Login(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
 	password, err := base64.StdEncoding.DecodeString(req.Password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseLoginInput(req.Email, password)
+	pv, err := key.Decrypt(password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
 
-	c.firebaseInteractor.Login(r.Context(), input)
+	input, err := port.NewFirebaseLoginInput(req.Email, string(pv))
+	if err != nil {
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
+
+		return
+	}
+
+	c.input.Execute(r.Context(), input)
+}
+
+type FirebaseChangePasswordController struct {
+	input  port.FirebaseChangePasswordInputPort
+	output port.FirebaseChangePasswordOutputPort
+}
+
+func NewFirebaseChangePasswordController(
+	input port.FirebaseChangePasswordInputPort,
+	output port.FirebaseChangePasswordOutputPort,
+) *FirebaseChangePasswordController {
+	return &FirebaseChangePasswordController{
+		input:  input,
+		output: output,
+	}
 }
 
 type ChangePasswordRequest struct {
@@ -104,9 +154,11 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"newPassword"`
 }
 
-func (c *FirebaseController) ChangePassword(w http.ResponseWriter, r *http.Request) {
+func (c *FirebaseChangePasswordController) Put(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPut {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -114,8 +166,7 @@ func (c *FirebaseController) ChangePassword(w http.ResponseWriter, r *http.Reque
 	atc, _ := r.Cookie("access-token")
 
 	if atc == nil {
-		log.WithCtx(r.Context()).Warn("access token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
@@ -123,39 +174,69 @@ func (c *FirebaseController) ChangePassword(w http.ResponseWriter, r *http.Reque
 	var req ChangePasswordRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
 	op, err := base64.StdEncoding.DecodeString(req.OldPassword)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
+
+		return
+	}
+
+	opv, err := key.Decrypt(op)
+	if err != nil {
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
 	np, err := base64.StdEncoding.DecodeString(req.NewPassword)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseChangePasswordInput(atc.Value, op, np)
+	npv, err := key.Decrypt(np)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	c.firebaseInteractor.ChangePassword(r.Context(), input)
+	input, err := port.NewFirebaseChangePasswordInput(atc.Value, string(opv), string(npv))
+	if err != nil {
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
+
+		return
+	}
+
+	c.input.Execute(r.Context(), input)
 }
 
-func (c *FirebaseController) CheckLogin(w http.ResponseWriter, r *http.Request) {
+type FirebaseCheckLoginController struct {
+	input  port.FirebaseCheckLoginInputPort
+	output port.FirebaseCheckLoginOutputPort
+}
+
+func NewFirebaseCheckLoginController(
+	input port.FirebaseCheckLoginInputPort,
+	output port.FirebaseCheckLoginOutputPort,
+) *FirebaseCheckLoginController {
+	return &FirebaseCheckLoginController{
+		input:  input,
+		output: output,
+	}
+}
+
+func (c *FirebaseCheckLoginController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -163,8 +244,7 @@ func (c *FirebaseController) CheckLogin(w http.ResponseWriter, r *http.Request) 
 	atc, _ := r.Cookie("access-token")
 
 	if atc == nil {
-		log.WithCtx(r.Context()).Warn("access token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
@@ -172,26 +252,42 @@ func (c *FirebaseController) CheckLogin(w http.ResponseWriter, r *http.Request) 
 	ftc, _ := r.Cookie("refresh-token")
 
 	if ftc == nil {
-		log.WithCtx(r.Context()).Warn("refresh token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseCheckLoginInput(atc.Value, ftc.Value)
+	input, err := port.NewFirebaseCheckLoginInput(atc.Value, ftc.Value)
 	if err != nil {
 		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
 
-	c.firebaseInteractor.CheckLogin(r.Context(), input)
+	c.input.Execute(r.Context(), input)
 }
 
-func (c *FirebaseController) Logout(w http.ResponseWriter, r *http.Request) {
+type FirebaseLogoutController struct {
+	input  port.FirebaseLogoutInputPort
+	output port.FirebaseLogoutOutputPort
+}
+
+func NewFirebaseLogoutController(
+	input port.FirebaseLogoutInputPort,
+	output port.FirebaseLogoutOutputPort,
+) *FirebaseLogoutController {
+	return &FirebaseLogoutController{
+		input:  input,
+		output: output,
+	}
+}
+
+func (c *FirebaseLogoutController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -199,8 +295,7 @@ func (c *FirebaseController) Logout(w http.ResponseWriter, r *http.Request) {
 	atc, _ := r.Cookie("access-token")
 
 	if atc == nil {
-		log.WithCtx(r.Context()).Warn("access token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
@@ -208,30 +303,45 @@ func (c *FirebaseController) Logout(w http.ResponseWriter, r *http.Request) {
 	ftc, _ := r.Cookie("refresh-token")
 
 	if ftc == nil {
-		log.WithCtx(r.Context()).Warn("refresh token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseLogoutInput(atc.Value, ftc.Value)
+	input, err := port.NewFirebaseLogoutInput(atc.Value, ftc.Value)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	c.firebaseInteractor.Logout(r.Context(), input)
+	c.input.Execute(r.Context(), input)
+}
+
+type FirebaseWithdrawController struct {
+	input  port.FirebaseWithdrawInputPort
+	output port.FirebaseWithdrawOutputPort
+}
+
+func NewFirebaseWithdrawController(
+	input port.FirebaseWithdrawInputPort,
+	output port.FirebaseWithdrawOutputPort,
+) *FirebaseWithdrawController {
+	return &FirebaseWithdrawController{
+		input:  input,
+		output: output,
+	}
 }
 
 type WithdrawRequest struct {
 	Password string `json:"password"`
 }
 
-func (c *FirebaseController) Withdraw(w http.ResponseWriter, r *http.Request) {
+func (c *FirebaseWithdrawController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
@@ -239,8 +349,7 @@ func (c *FirebaseController) Withdraw(w http.ResponseWriter, r *http.Request) {
 	atc, _ := r.Cookie("access-token")
 
 	if atc == nil {
-		log.WithCtx(r.Context()).Warn("access token is nil")
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(""))
 
 		return
 	}
@@ -248,47 +357,67 @@ func (c *FirebaseController) Withdraw(w http.ResponseWriter, r *http.Request) {
 	var req WithdrawRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
 	password, err := base64.StdEncoding.DecodeString(req.Password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseWithdrawInput(atc.Value, password)
+	pv, err := key.Decrypt(password)
 	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
 
 		return
 	}
 
-	c.firebaseInteractor.Withdraw(r.Context(), input)
+	input, err := port.NewFirebaseWithdrawInput(atc.Value, string(pv))
+	if err != nil {
+		c.output.ErrorRender(r.Context(), adapter.NewBadRequestError(err.Error()))
+
+		return
+	}
+
+	c.input.Execute(r.Context(), input)
 }
 
-func (c *FirebaseController) Authorize(w http.ResponseWriter, r *http.Request) {
+type FirebaseAuthorizeController struct {
+	input  port.FirebaseAuthorizeInputPort
+	output port.FirebaseAuthorizeOutputPort
+}
+
+func NewFirebaseAuthorizeController(
+	input port.FirebaseAuthorizeInputPort,
+	output port.FirebaseAuthorizeOutputPort,
+) *FirebaseAuthorizeController {
+	return &FirebaseAuthorizeController{
+		input:  input,
+		output: output,
+	}
+}
+
+func (c *FirebaseAuthorizeController) Post(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	idToken := r.Header.Get("Authorization")
 
 	if idToken == "" {
-		log.WithCtx(r.Context()).Warn("no authorization header")
-		w.WriteHeader(http.StatusUnauthorized)
+		c.output.ErrorRender(r.Context(), errors.NewUnauthorizedError(""))
 
 		return
 	}
 
-	input, err := usecase.NewFirebaseAuthorizeInput(idToken)
+	input, err := port.NewFirebaseAuthorizeInput(idToken)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		c.output.ErrorRender(r.Context(), errors.NewUnauthorizedError(""))
 
 		return
 	}
 
-	c.firebaseInteractor.Authorize(r.Context(), input)
+	c.input.Execute(r.Context(), input)
 }

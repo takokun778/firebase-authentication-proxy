@@ -4,28 +4,24 @@ import (
 	"context"
 	"net/http"
 
-	cx "github.com/takokun778/firebase-authentication-proxy/driver/context"
-	"github.com/takokun778/firebase-authentication-proxy/usecase"
+	"github.com/takokun778/firebase-authentication-proxy/adapter"
+	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type KeyPresenter struct {
-	*errorRender
+type KeyFetchPublicPresenter struct{}
+
+func NewKeyGetPublicPresenter() port.KeyFetchPublicOutputPort {
+	return &KeyFetchPublicPresenter{}
 }
 
-func NewKeyPresenter() usecase.KeyOutputPort {
-	return &KeyPresenter{
-		errorRender: ErrorRender,
-	}
-}
-
-func (p *KeyPresenter) GetPublic(ctx context.Context, output usecase.KeyGetPublicOutput) {
-	r, _ := cx.GetResWriter(ctx)
+func (p *KeyFetchPublicPresenter) Render(ctx context.Context, output port.KeyFetchPublicOutput) {
+	r, _ := adapter.GetResWriter(ctx)
 
 	r.WriteHeader(http.StatusOK)
 
 	_, _ = r.Write(output.PublicKey)
 }
 
-func (p *KeyPresenter) ErrorRender(ctx context.Context, err error) {
-	p.errorRender.ErrRender(ctx, err)
+func (p *KeyFetchPublicPresenter) ErrorRender(ctx context.Context, err error) {
+	ErrorRender(ctx, err)
 }

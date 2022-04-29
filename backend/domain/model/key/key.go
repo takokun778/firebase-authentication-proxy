@@ -6,72 +6,56 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
-	"errors"
 	"log"
 	"os"
+
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/errors"
 )
 
-var (
-	privateKey *rsa.PrivateKey
-	PublicKey  []byte
-	ErrInvalid = errors.New("private key is invalid")
-)
+var key *Key
+
+type Key struct {
+	private *rsa.PrivateKey
+	public  []byte
+}
 
 func init() {
-	// 自前でpemキーを用意する場合
-	// k, err := readKeyFromFile()
-	// if err != nil {
-	// 	log.Fatalf("failed to read pem key file: %v", err)
-	// }
-	// key, err := exportPEMStrToPrivKey(k)
-	// firebaseが発行する秘密鍵から公開鍵を作る場合
 	priv := os.Getenv("PRIVATE_KEY")
 
-	key, err := exportPEMStrToPrivKey([]byte(priv))
+	block, _ := pem.Decode([]byte(priv))
 
-	privateKey = key
-
+	private, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		log.Fatalf("failed to export pem key: %v", err)
+		log.Fatal(err)
 	}
 
-	b, err := x509.MarshalPKIXPublicKey(&key.PublicKey)
+	b, err := x509.MarshalPKIXPublicKey(&private.PublicKey)
 	if err != nil {
-		log.Fatalf("failed to marshal public key: %v", err)
+		log.Fatal(err)
 	}
 
-	PublicKey = pem.EncodeToMemory(
+	public := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "PUBLIC KEY",
 			Bytes: b,
 		},
 	)
+
+	key = &Key{
+		private: private,
+		public:  public,
+	}
 }
 
 func Decrypt(encrypted []byte) ([]byte, error) {
-	return rsa.DecryptOAEP(sha256.New(), rand.Reader, privateKey, encrypted, nil)
+	decrepted, err := rsa.DecryptOAEP(sha256.New(), rand.Reader, key.private, encrypted, nil)
+	if err != nil {
+		return nil, errors.NewInternalError(err.Error())
+	}
+
+	return decrepted, nil
 }
 
-// func readKeyFromFile() ([]byte, error) {
-// 	return ioutil.ReadFile("key.pem")
-// }
-
-func exportPEMStrToPrivKey(priv []byte) (*rsa.PrivateKey, error) {
-	block, _ := pem.Decode(priv)
-
-	// 自前でpemキーを用意する場合
-	// key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-
-	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-	if err != nil {
-		return nil, err
-	}
-
-	pk, ok := key.(*rsa.PrivateKey)
-
-	if !ok {
-		return nil, ErrInvalid
-	}
-
-	return pk, nil
+func GetPublic() []byte {
+	return key.public
 }

@@ -5,11 +5,12 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/takokun778/firebase-authentication-proxy/domain/model/user"
+	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
 type UserGateway struct{}
 
-func NewUserGateway() user.Repository {
+func NewUserGateway() port.UserRepository {
 	return &UserGateway{}
 }
 
@@ -23,7 +24,7 @@ func (g *UserGateway) Delete(ctx context.Context, id user.ID) error {
 
 type UserInMemory struct{}
 
-func NewUserInMemory() user.Repository {
+func NewUserInMemory() port.UserRepository {
 	return &UserInMemory{}
 }
 

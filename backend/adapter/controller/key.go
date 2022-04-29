@@ -3,34 +3,33 @@ package controller
 import (
 	"net/http"
 
-	"github.com/takokun778/firebase-authentication-proxy/driver/log"
-	"github.com/takokun778/firebase-authentication-proxy/usecase"
+	"github.com/takokun778/firebase-authentication-proxy/adapter"
+	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type KeyController struct {
-	keyInteractor usecase.KeyInputPort
+type KeyFetchPublicController struct {
+	input  port.KeyFetchPublicInputPort
+	output port.KeyFetchPublicOutputPort
 }
 
-func NewKeyController(input usecase.KeyInputPort) *KeyController {
-	return &KeyController{
-		keyInteractor: input,
+func NewKeyFetchPublicController(
+	input port.KeyFetchPublicInputPort,
+	output port.KeyFetchPublicOutputPort,
+) *KeyFetchPublicController {
+	return &KeyFetchPublicController{
+		input:  input,
+		output: output,
 	}
 }
 
-func (c *KeyController) GetPublic(w http.ResponseWriter, r *http.Request) {
+func (c *KeyFetchPublicController) Get(w http.ResponseWriter, r *http.Request) {
+	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
+
 	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
 
 		return
 	}
 
-	input, err := usecase.NewKeyGetPublicInput()
-	if err != nil {
-		log.WithCtx(r.Context()).Warn(err.Error())
-		w.WriteHeader(http.StatusBadRequest)
-
-		return
-	}
-
-	c.keyInteractor.GetPublic(r.Context(), input)
+	c.input.Execute(r.Context())
 }

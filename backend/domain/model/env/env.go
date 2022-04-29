@@ -7,7 +7,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const dev = "dev"
+const (
+	dev = "dev"
+)
 
 func init() {
 	env := os.Getenv("ENV")

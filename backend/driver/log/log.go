@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/takokun778/firebase-authentication-proxy/domain/model/env"
 	cx "github.com/takokun778/firebase-authentication-proxy/driver/context"
-	"github.com/takokun778/firebase-authentication-proxy/driver/env"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
