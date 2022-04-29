@@ -44,7 +44,7 @@ export const putChangePassword = async (
 ) => {
     try {
         const result = await client.put(
-            "/api/change/password",
+            "/api/password",
             JSON.stringify({ oldPassword, newPassword }),
         );
         return result;
