@@ -83,6 +83,20 @@ func (t AccessToken) GetIat() (int, error) {
 	return c.Iat, nil
 }
 
+func (t AccessToken) CalcExpires() (int, error) {
+	exp, err := t.GetExp()
+	if err != nil {
+		return 0, err
+	}
+
+	iat, err := t.GetIat()
+	if err != nil {
+		return 0, err
+	}
+
+	return exp - iat, nil
+}
+
 type claims struct {
 	UID   string `json:"user_id"`
 	Email string `json:"email"`

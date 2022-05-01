@@ -63,14 +63,7 @@ func (i *FirebaseLoginInteractor) Execute(ctx context.Context, input port.Fireba
 		return
 	}
 
-	exp, err := tokens.AccessToken.GetExp()
-	if err != nil {
-		i.output.ErrorRender(ctx, err)
-
-		return
-	}
-
-	iat, err := tokens.AccessToken.GetIat()
+	expires, err := tokens.AccessToken.CalcExpires()
 	if err != nil {
 		i.output.ErrorRender(ctx, err)
 
@@ -80,7 +73,7 @@ func (i *FirebaseLoginInteractor) Execute(ctx context.Context, input port.Fireba
 	i.output.Render(ctx, port.FirebaseLoginOutput{
 		AccessToken:  tokens.AccessToken.Value(),
 		RefreshToken: tokens.RefreshToken.Value(),
-		Expires:      exp - iat,
+		Expires:      expires,
 	})
 }
 
