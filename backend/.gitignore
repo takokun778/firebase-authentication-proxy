@@ -1,3 +1,4 @@
 .env
 tmp
 wire_gen.go
+key.pem

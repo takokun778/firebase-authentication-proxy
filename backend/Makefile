@@ -2,16 +2,16 @@ export ENV := dev
 export PORT := 8080
 
 init:
-	./.develop/init.sh
+	@./.develop/init.sh
 dev:
-	air
+	@air
 run:
-	go run main.go
+	@go run main.go
 lint:
-	golangci-lint run --fix
+	@golangci-lint run --fix
 test:
-	go test ./...
+	@go test ./...
 key:
-	openssl genrsa -out key.pem 2048
+	@openssl genrsa -out key.pem 2048
 di:
-	wire
+	@wire
