@@ -7,18 +7,18 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type KeyFetchPublicInteractor struct {
-	output port.KeyFetchPublicOutputPort
+type KeyFetchInteractor struct {
+	output port.KeyFetchOutputPort
 }
 
-func NewKeyFetchPublicInteractor(output port.KeyFetchPublicOutputPort) port.KeyFetchPublicInputPort {
-	return &KeyFetchPublicInteractor{
+func NewKeyFetchInteractor(output port.KeyFetchOutputPort) port.KeyFetchInputPort {
+	return &KeyFetchInteractor{
 		output: output,
 	}
 }
 
-func (i *KeyFetchPublicInteractor) Execute(ctx context.Context) {
-	output := port.KeyFetchPublicOutput{
+func (i *KeyFetchInteractor) Execute(ctx context.Context) {
+	output := port.KeyFetchOutput{
 		PublicKey: key.GetPublic(),
 	}
 

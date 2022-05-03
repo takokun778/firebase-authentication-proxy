@@ -7,22 +7,22 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type KeyFetchPublicController struct {
-	input  port.KeyFetchPublicInputPort
-	output port.KeyFetchPublicOutputPort
+type KeyFetchController struct {
+	input  port.KeyFetchInputPort
+	output port.KeyFetchOutputPort
 }
 
-func NewKeyFetchPublicController(
-	input port.KeyFetchPublicInputPort,
-	output port.KeyFetchPublicOutputPort,
-) *KeyFetchPublicController {
-	return &KeyFetchPublicController{
+func NewKeyFetchController(
+	input port.KeyFetchInputPort,
+	output port.KeyFetchOutputPort,
+) *KeyFetchController {
+	return &KeyFetchController{
 		input:  input,
 		output: output,
 	}
 }
 
-func (c *KeyFetchPublicController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *KeyFetchController) Get(w http.ResponseWriter, r *http.Request) {
 	r = r.WithContext(adapter.SetResWriter(r.Context(), w))
 
 	if r.Method != http.MethodGet {

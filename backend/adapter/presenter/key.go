@@ -8,13 +8,13 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-type KeyFetchPublicPresenter struct{}
+type KeyFetchPresenter struct{}
 
-func NewKeyGetPublicPresenter() port.KeyFetchPublicOutputPort {
-	return &KeyFetchPublicPresenter{}
+func NewKeyFetchPresenter() port.KeyFetchOutputPort {
+	return &KeyFetchPresenter{}
 }
 
-func (p *KeyFetchPublicPresenter) Render(ctx context.Context, output port.KeyFetchPublicOutput) {
+func (p *KeyFetchPresenter) Render(ctx context.Context, output port.KeyFetchOutput) {
 	r, _ := adapter.GetResWriter(ctx)
 
 	r.WriteHeader(http.StatusOK)
@@ -22,6 +22,6 @@ func (p *KeyFetchPublicPresenter) Render(ctx context.Context, output port.KeyFet
 	_, _ = r.Write(output.PublicKey)
 }
 
-func (p *KeyFetchPublicPresenter) ErrorRender(ctx context.Context, err error) {
+func (p *KeyFetchPresenter) ErrorRender(ctx context.Context, err error) {
 	ErrorRender(ctx, err)
 }

@@ -20,7 +20,7 @@ var gatewaySet = wire.NewSet(
 )
 
 var presenterSet = wire.NewSet(
-	presenter.NewKeyGetPublicPresenter,
+	presenter.NewKeyFetchPresenter,
 	presenter.NewFirebaseAuthorizePresenter,
 	presenter.NewFirebaseChangePasswordPresenter,
 	presenter.NewFirebaseCheckLoginPresenter,
@@ -31,7 +31,7 @@ var presenterSet = wire.NewSet(
 )
 
 var interactorSet = wire.NewSet(
-	interactor.NewKeyFetchPublicInteractor,
+	interactor.NewKeyFetchInteractor,
 	interactor.NewFirebaseAuthorizeInteractor,
 	interactor.NewFirebaseChangePasswordInteractor,
 	interactor.NewFirebaseCheckLoginInteractor,
@@ -42,7 +42,7 @@ var interactorSet = wire.NewSet(
 )
 
 var controllerSet = wire.NewSet(
-	controller.NewKeyFetchPublicController,
+	controller.NewKeyFetchController,
 	controller.NewFirebaseAuthorizeController,
 	controller.NewFirebaseChangePasswordController,
 	controller.NewFirebaseCheckLoginController,

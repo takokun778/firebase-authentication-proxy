@@ -4,15 +4,15 @@ import (
 	"context"
 )
 
-type KeyFetchPublicInputPort interface {
+type KeyFetchInputPort interface {
 	Execute(context.Context)
 }
 
-type KeyFetchPublicOutputPort interface {
-	Render(context.Context, KeyFetchPublicOutput)
+type KeyFetchOutputPort interface {
+	Render(context.Context, KeyFetchOutput)
 	ErrorRender(context.Context, error)
 }
 
-type KeyFetchPublicOutput struct {
+type KeyFetchOutput struct {
 	PublicKey []byte
 }

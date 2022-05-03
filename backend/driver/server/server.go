@@ -21,7 +21,7 @@ type HTTPServer struct {
 }
 
 func NewHTTPServer(
-	key *controller.KeyFetchPublicController,
+	key *controller.KeyFetchController,
 	register *controller.FirebaseRegisterController,
 	login *controller.FirebaseLoginController,
 	changePassword *controller.FirebaseChangePasswordController,
