@@ -14,10 +14,6 @@ const (
 func init() {
 	env := os.Getenv("ENV")
 
-	if env == "" {
-		env = dev
-	}
-
 	if env == dev {
 		err := godotenv.Load(".env")
 		if err != nil {
