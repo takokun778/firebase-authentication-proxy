@@ -56,6 +56,10 @@ func Decrypt(encrypted []byte) ([]byte, error) {
 	return decrepted, nil
 }
 
-func GetPublic() []byte {
+func GetPublicByte() []byte {
 	return key.public
+}
+
+func GetPublic() *rsa.PublicKey {
+	return &key.private.PublicKey
 }

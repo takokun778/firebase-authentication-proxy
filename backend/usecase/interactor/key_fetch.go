@@ -19,7 +19,7 @@ func NewKeyFetchInteractor(output port.KeyFetchOutputPort) port.KeyFetchInputPor
 
 func (i *KeyFetchInteractor) Execute(ctx context.Context) {
 	output := port.KeyFetchOutput{
-		PublicKey: key.GetPublic(),
+		PublicKey: key.GetPublicByte(),
 	}
 
 	i.output.Render(ctx, output)
