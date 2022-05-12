@@ -106,6 +106,37 @@ func TestFirebaseChangePasswordControllerPut(t *testing.T) {
 			},
 		},
 		{
+			name: "認証Tokenがない場合にエラーが発生することを確認",
+			fields: fields{
+				input: &MockFirebaseChangePasswordInputPort{
+					Assert: func(input port.FirebaseChangePasswordInput) {
+						t.Errorf("input port execute is called")
+					},
+				},
+				output: &MockFirebaseChangePasswordOutputPort{
+					Assert: func(output port.FirebaseChangePasswordOutput) {
+						t.Errorf("out port render is called")
+					},
+					ErrorAssert: func(err error) {
+						if err == nil {
+							t.Errorf("error is nil")
+						}
+					},
+				},
+			},
+			args: args{
+				w: &mock.ResponseWriter{},
+				r: &http.Request{
+					Method: http.MethodPost,
+					Header: http.Header{},
+					Body: mock.CreateFirebaseChangePasswordPutBody(controller.FirebaseChangePasswordPutBody{
+						OldPassword: "oldpassword",
+						NewPassword: "newpassword",
+					}),
+				},
+			},
+		},
+		{
 			name: "公開鍵で暗号化していないパスワードがリクエストされるとエラーが発生することを確認",
 			fields: fields{
 				input: &MockFirebaseChangePasswordInputPort{
