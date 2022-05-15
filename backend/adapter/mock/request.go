@@ -47,6 +47,13 @@ func WithToken(req *http.Request) *http.Request {
 	return req
 }
 
+func CreateHeaderWithToken() http.Header {
+	header := &http.Header{}
+	header.Set("Authorization", createTestJwt(uuid.New().String(), "test@example.com"))
+
+	return *header
+}
+
 func createTestJwt(userID, email string) string {
 	// https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
 	token := jwt.New(jwt.SigningMethodRS256)

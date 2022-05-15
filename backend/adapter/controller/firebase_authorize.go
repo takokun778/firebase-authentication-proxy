@@ -28,6 +28,12 @@ func (c *FirebaseAuthorizeController) Post(w http.ResponseWriter, r *http.Reques
 
 	idToken := r.Header.Get("Authorization")
 
+	if r.Method != http.MethodPost {
+		c.output.ErrorRender(r.Context(), adapter.NewMethodNotAllowedError())
+
+		return
+	}
+
 	if idToken == "" {
 		c.output.ErrorRender(r.Context(), errors.NewUnauthorizedError(""))
 
