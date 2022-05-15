@@ -106,3 +106,14 @@ func CreateFirebaseChangePasswordPutBody(body controller.FirebaseChangePasswordP
 
 	return pr
 }
+
+func CreateFirebaseWithdrawPostBody(body controller.FirebaseWithdrawPostBody) io.ReadCloser {
+	pr, pw := io.Pipe()
+
+	go func() {
+		_ = json.NewEncoder(pw).Encode(&body)
+		pw.Close()
+	}()
+
+	return pr
+}
