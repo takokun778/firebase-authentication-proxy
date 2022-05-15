@@ -82,39 +82,22 @@ func createTestJwt(userID, email string) string {
 }
 
 func CreateFirebaseRegisterPostBody(body controller.FirebaseRegisterPostBody) io.ReadCloser {
-	pr, pw := io.Pipe()
-
-	go func() {
-		_ = json.NewEncoder(pw).Encode(&body)
-		pw.Close()
-	}()
-
-	return pr
+	return encode(body)
 }
 
 func CreateFirebaseLoginPostBody(body controller.FirebaseLoginPostBody) io.ReadCloser {
-	pr, pw := io.Pipe()
-
-	go func() {
-		_ = json.NewEncoder(pw).Encode(&body)
-		pw.Close()
-	}()
-
-	return pr
+	return encode(body)
 }
 
 func CreateFirebaseChangePasswordPutBody(body controller.FirebaseChangePasswordPutBody) io.ReadCloser {
-	pr, pw := io.Pipe()
-
-	go func() {
-		_ = json.NewEncoder(pw).Encode(&body)
-		pw.Close()
-	}()
-
-	return pr
+	return encode(body)
 }
 
 func CreateFirebaseWithdrawPostBody(body controller.FirebaseWithdrawPostBody) io.ReadCloser {
+	return encode(body)
+}
+
+func encode[T any](body T) *io.PipeReader {
 	pr, pw := io.Pipe()
 
 	go func() {
