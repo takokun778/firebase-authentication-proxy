@@ -9,7 +9,7 @@ type ResponseWriter struct {
 }
 
 func (r *ResponseWriter) Header() http.Header {
-	return nil
+	return http.Header{}
 }
 
 func (r *ResponseWriter) Write(b []byte) (int, error) {
