@@ -11,7 +11,7 @@ import (
 	"github.com/takokun778/firebase-authentication-proxy/usecase/port"
 )
 
-func TestFirebaseCheckLoginPresenter_Render(t *testing.T) {
+func TestFirebaseCheckLoginPresenterRender(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
